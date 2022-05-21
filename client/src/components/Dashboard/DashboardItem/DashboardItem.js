@@ -86,19 +86,24 @@ class DashboardItem extends Component {
       .then((data) => {
         let value;
         let formattedValue;
-        if (visual === 'chart') {
-          value = data.data[strippedMetric];
-          formattedValue = value;
-        } else {
-          try {
-            value = strippedMetric.startsWith('ga:') ? data.data[strippedMetric] : data.data[`ga:${strippedMetric}`];
-            formattedValue = numberWithCommas(parseInt(value.value, 10));
-          } catch (exp) {
-            console.log(exp);
-            formattedValue = "Error Retrieving Value"
+        try {
+          if (visual === 'chart') {
+            value = data.data[strippedMetric];
+            formattedValue = value;
+          } else {
+            try {
+              value = strippedMetric.startsWith('ga:') ? data.data[strippedMetric] : data.data[`ga:${strippedMetric}`];
+              formattedValue = numberWithCommas(parseInt(value.value, 10));
+            } catch (exp) {
+              console.log(exp);
+              formattedValue = "Error Retrieving Value"
+            }
           }
+          this.setState({ data: formattedValue });
+          
+        } catch ( e ) {
+          console.log( `fetch error e`, e )
         }
-        this.setState({ data: formattedValue });
       });
   }
 
